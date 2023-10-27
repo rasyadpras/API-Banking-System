@@ -1,34 +1,14 @@
 const express = require('express');
+const morgan = require('morgan');
 const router = express.Router();
+const userRoute = require('./user.route');
+const accountRoute = require('./account.route');
+const trxRoute = require('./transaction.route');
 
-router.get('/api/v1/users', (req, res) => {
-    res.json({
-        "data": null,
-        "message": "ini users",
-        "status": 200
-    })
-});
+router.use(morgan('dev'));
 
-router.get('/api/v1/accounts', (req, res) => {
-    res.json({
-        "data": null,
-        "message": "ini accounts",
-        "status": 200
-    })
-});
-
-router.get('/api/v1/transactions', (req, res) => {
-    res.json({
-        "data": null,
-        "message": "ini transactions",
-        "status": 200
-    })
-});
-
-router.get('/*', (req, res) => {
-    res.send('Halaman tidak ditemukan')
-});
-
-
+router.use('/api/v1/users', userRoute);
+router.use('/api/v1/accounts', accountRoute);
+router.use('/api/v1/transactions', trxRoute);
 
 module.exports = router;
