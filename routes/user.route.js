@@ -8,9 +8,7 @@ const {
 const { checkPostUser } = require('../middleware/middleware');
 
 router.get('/', getUsers);
-
 router.post('/', checkPostUser, postUser);
-
 router.get('/:id', getUserById);
 
 module.exports = router;

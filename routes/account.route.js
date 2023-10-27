@@ -7,9 +7,7 @@ const {
 } = require('../controller/controller_account');
 
 router.get('/', getAccounts);
-
 router.post('/', postAccount);
-
 router.get('/:id', getAccountById);
 
 module.exports = router;
