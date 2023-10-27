@@ -1,14 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const {
-    TestUser,
     getUsers,
     postUser,
-} = require('../controller/controller');
+    getUserById
+} = require('../controller/controller_user');
 const { checkPostUser } = require('../middleware/middleware');
 
 router.get('/', getUsers);
 
 router.post('/', checkPostUser, postUser);
+
+router.get('/:id', getUserById);
 
 module.exports = router;

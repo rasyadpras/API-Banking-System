@@ -3,11 +3,13 @@ const router = express.Router();
 const {
     getAccounts,
     postAccount,
-} = require('../controller/controller');
-const { checkPostUser } = require('../middleware/middleware');
+    getAccountById,
+} = require('../controller/controller_account');
 
 router.get('/', getAccounts);
 
 router.post('/', postAccount);
+
+router.get('/:id', getAccountById);
 
 module.exports = router;
