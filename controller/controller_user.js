@@ -21,7 +21,7 @@ async function getUsers(req, res) {
                 id: 'asc'
             }
         });
-        let resp = ResponseTemplate(users, 'success', null, 200);
+        let resp = ResponseTemplate(users, 'get data success', null, 200);
         res.json(resp);
         return;
     } catch(error) {
@@ -43,7 +43,7 @@ async function postUser(req, res) {
         const users = await prisma.users.create({
             data: payload
         });
-        let resp = ResponseTemplate(users, 'success', null, 200);
+        let resp = ResponseTemplate(users, 'input data success', null, 200);
         res.json(resp);
         return;
     } catch (error) {
@@ -62,7 +62,7 @@ async function getUserById(req, res) {
                 id: Number(id)
             },
         });
-        let resp = ResponseTemplate(users, 'success', null, 200);
+        let resp = ResponseTemplate(users, 'get data success', null, 200);
         res.json(resp);
         return;
     } catch (error) {
@@ -72,8 +72,67 @@ async function getUserById(req, res) {
     };
 };
 
+async function updateUser(req, res) {
+    const { name, email, password } = req.body;
+    const { id } = req.params;
+    const payload = {};
+
+    if (!name && !email && !password) {
+        let resp = ResponseTemplate(null, 'bad request', null, 400)
+        res.json(resp)
+        return
+    }
+
+    if (name) {
+        payload.name = name
+    }
+    if (email) {
+        payload.email = email
+    }
+    if (password) {
+        payload.password = password
+    }
+
+    try {
+        const users = await prisma.users.update({
+            where: {
+                id: Number(id)
+            },
+            data: payload
+        });
+        let resp = ResponseTemplate(users, 'update data success', null, 200);
+        res.json(resp);
+        return;
+    } catch (error) {
+        let resp = ResponseTemplate(null, 'internal server error', error, 500);
+        res.json(resp);
+        return;
+    };
+};
+
+async function deleteUser(req, res) {
+    const { id } = req.params;
+
+    try {
+        const users = await prisma.users.delete({
+            where: {
+                id: Number(id)
+            },
+        });
+        let resp = ResponseTemplate(null, 'delete data success', null, 200);
+        res.json(resp);
+        return;
+    } catch (error) {
+        let resp = ResponseTemplate(null, 'internal server error', error, 500);
+        res.json(resp);
+        return;
+    }
+};
+
 module.exports = {
     getUsers,
     postUser,
     getUserById,
+    updateUser,
+    deleteUser
 };

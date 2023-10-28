@@ -15,17 +15,21 @@ model users {
   name          String          @unique
   email         String          @unique
   password      String          @unique
+  created_at    DateTime        @default(now())
+  updated_at    DateTime?       @updatedAt
   profiles      profiles?
   bank_accounts bank_accounts[]
 }
 
 model profiles {
-  id              Int    @id @default(autoincrement())
+  id              Int       @id @default(autoincrement())
   identity_type   String
-  identity_number Int    @unique
-  address         String @db.Text
-  user_id         Int    @unique
-  user            users  @relation(fields: [user_id], references: [id])
+  identity_number Int       @unique
+  address         String    @db.Text
+  created_at      DateTime  @default(now())
+  updated_at      DateTime? @updatedAt
+  user_id         Int       @unique
+  user            users     @relation(fields: [user_id], references: [id])
 }
 
 model bank_accounts {
@@ -33,6 +37,8 @@ model bank_accounts {
   bank_name           String
   bank_account_number Int            @unique
   balance             Float          @db.DoublePrecision
+  created_at          DateTime       @default(now())
+  updated_at          DateTime?      @updatedAt
   user_id             Int
   user                users          @relation(fields: [user_id], references: [id])
   transaction_from    transactions[] @relation("TransactionFrom")
@@ -43,6 +49,7 @@ model transactions {
   id                     Int           @id @default(autoincrement())
   amount                 Float         @db.DoublePrecision
   transaction_date       DateTime      @default(now())
+  updated_at             DateTime?     @updatedAt
   from_account           bank_accounts @relation("TransactionFrom", fields: [source_account_id], references: [id])
   to_account             bank_accounts @relation("TransactionTo", fields: [destination_account_id], references: [id])
   source_account_id      Int

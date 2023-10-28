@@ -24,7 +24,7 @@ async function getAccounts(req, res) {
                 id: 'asc'
             }
         });
-        let resp = ResponseTemplate(accounts, 'success', null, 200);
+        let resp = ResponseTemplate(accounts, 'get data success', null, 200);
         res.json(resp);
         return;
     } catch(error) {
@@ -47,7 +47,7 @@ async function postAccount(req, res) {
         const accounts = await prisma.bank_accounts.create({
             data: payload
         });
-        let resp = ResponseTemplate(accounts, 'success', null, 200);
+        let resp = ResponseTemplate(accounts, 'input data success', null, 200);
         res.json(resp);
         return;
     } catch (error) {
@@ -66,7 +66,7 @@ async function getAccountById(req, res) {
                 id: Number(id)
             },
         });
-        let resp = ResponseTemplate(accounts, 'success', null, 200);
+        let resp = ResponseTemplate(accounts, 'get data success', null, 200);
         res.json(resp);
         return;
     } catch (error) {

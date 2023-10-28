@@ -5,7 +5,7 @@ function checkPostUser(req, res, next) {
     const schema = Joi.object({
         name: Joi.string().required(),
         email: Joi.string().email().required(),
-        password: Joi.string().alphanum().required()
+        password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{5,30}$')).required()
     });
     const { error } = schema.validate(req.body);
     if (error) {

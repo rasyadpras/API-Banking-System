@@ -21,7 +21,7 @@ async function getTransactions(req, res) {
                 id: 'asc'
             }
         });
-        let resp = ResponseTemplate(transactions, 'success', null, 200);
+        let resp = ResponseTemplate(transactions, 'get data success', null, 200);
         res.json(resp);
         return;
     } catch(error) {
@@ -43,7 +43,7 @@ async function postTransaction(req, res) {
         const transactions = await prisma.transactions.create({
             data: payload
         });
-        let resp = ResponseTemplate(transactions, 'success', null, 200);
+        let resp = ResponseTemplate(transactions, 'input data success', null, 200);
         res.json(resp);
         return;
     } catch (error) {
@@ -62,7 +62,7 @@ async function getTransactionById(req, res) {
                 id: Number(id)
             },
         });
-        let resp = ResponseTemplate(transactions, 'success', null, 200);
+        let resp = ResponseTemplate(transactions, 'get data success', null, 200);
         res.json(resp);
         return;
     } catch (error) {
