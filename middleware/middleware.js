@@ -36,10 +36,9 @@ function checkPostAccount(req, res, next) {
 
 function checkPostTransaction(req, res, next) {
     const schema = Joi.object({
-        user_id: Joi.number().required(),
-        bank_name: Joi.string().required(),
-        bank_account_number: Joi.number().required(),
-        balance: Joi.number().precision(2).required()
+        amount: Joi.number().precision(2).required(),
+        source_account_id: Joi.number().required(),
+        destination_account_id: Joi.number().required()
     });
     const { error } = schema.validate(req.body);
     if (error) {
@@ -53,5 +52,6 @@ function checkPostTransaction(req, res, next) {
 
 module.exports = {
     checkPostUser,
-    checkPostAccount
+    checkPostAccount,
+    checkPostTransaction
 }
