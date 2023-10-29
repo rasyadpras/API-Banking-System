@@ -19,7 +19,10 @@ async function getUsers(req, res) {
             where: payload,
             orderBy: {
                 id: 'asc'
-            }
+            },
+            include: {
+                profiles: true,
+            },
         });
         let resp = ResponseTemplate(users, 'get data success', null, 200);
         res.json(resp);
@@ -61,6 +64,9 @@ async function getUserById(req, res) {
             where: {
                 id: Number(id)
             },
+            include: {
+                profiles: true,
+            },
         });
         let resp = ResponseTemplate(users, 'get data success', null, 200);
         res.json(resp);
@@ -78,9 +84,9 @@ async function updateUser(req, res) {
     const payload = {};
 
     if (!name && !email && !password) {
-        let resp = ResponseTemplate(null, 'bad request', null, 400)
-        res.json(resp)
-        return
+        let resp = ResponseTemplate(null, 'bad request', null, 400);
+        res.json(resp);
+        return;
     }
 
     if (name) {
