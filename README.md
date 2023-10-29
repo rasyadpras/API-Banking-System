@@ -15,30 +15,15 @@
 
 ## API Endpoint
 
-#### Get item
-
-```
-  GET /api/v1
-```
-
-| Endpoint               |  Description                |
-| :--------------        |  :------------------------  |
-| `/users`               |  Get all user data          |
-| `/users/:{id}`         |  Get user data by id        |
-| `/accounts`            |  Get all account data       |
-| `/accounts/:{id}`      |  Get user account by id     |
-| `/transactions`        |  Get all transaction data   |
-| `/transactions/:{id}`  |  Get user transaction by id |
-
-#### Insert data
-
-```
-  POST /api/v1
-```
-
-| Endpoint               |  Description                |
-| :--------------        |  :------------------------  |
-| `/users`               |  Add new user data          |
-| `/accounts`            |  Add new account data       |
-| `/transactions`        |  Add new transaction data   |
+| Endpoint                          |  Description                |
+| :------------------------------   |  :------------------------  |
+| `GET /api/v1/users`               |  Get all user data          |
+| `GET /api/v1/users/:{id}`         |  Get user data by id        |
+| `GET /api/v1/accounts`            |  Get all account data       |
+| `GET /api/v1/accounts/:{id}`      |  Get user account by id     |
+| `GET /api/v1/transactions`        |  Get all transaction data   |
+| `GET /api/v1/transactions/:{id}`  |  Get user transaction by id |
+| `POST /api/v1/users`              |  Add new user data          |
+| `POST /api/v1/accounts`           |  Add new account data       |
+| `POST /api/v1/transactions`       |  Add new transaction data   |
 
