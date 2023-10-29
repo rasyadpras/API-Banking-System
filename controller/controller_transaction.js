@@ -61,6 +61,18 @@ async function getTransactionById(req, res) {
             where: {
                 id: Number(id)
             },
+            include: {
+                from_account: {
+                    include: {
+                        user: true
+                    }
+                },
+                to_account: {
+                    include: {
+                        user: true
+                    }
+                }
+            }
         });
         let resp = ResponseTemplate(transactions, 'get data success', null, 200);
         res.json(resp);

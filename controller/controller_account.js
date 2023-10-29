@@ -22,6 +22,9 @@ async function getAccounts(req, res) {
             where: payload,
             orderBy: {
                 id: 'asc'
+            },
+            include: {
+                user: true
             }
         });
         let resp = ResponseTemplate(accounts, 'get data success', null, 200);
@@ -65,6 +68,9 @@ async function getAccountById(req, res) {
             where: {
                 id: Number(id)
             },
+            include: {
+                user: true
+            }
         });
         let resp = ResponseTemplate(accounts, 'get data success', null, 200);
         res.json(resp);
