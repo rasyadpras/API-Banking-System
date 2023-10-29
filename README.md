@@ -17,7 +17,7 @@
 
 #### Get item
 
-```http
+```
   GET /api/v1
 ```
 
@@ -32,7 +32,7 @@
 
 #### Insert data
 
-```http
+```
   POST /api/v1
 ```
 
