@@ -2,7 +2,7 @@
 
 ## Entity Relationship Diagram
 
-![Challenge 4](https://github.com/rasyadpras/API-Banking-System/assets/106673670/5f7e6a54-b764-4a2e-b210-a16515bc63cc)
+![Challenge 4](https://github.com/rasyadpras/API-Banking-System/assets/106673670/af5ea9f8-5c77-4ee1-a174-4bf7fe9aee75)
 
 
 ## Delivery
