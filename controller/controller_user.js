@@ -20,8 +20,13 @@ async function getUsers(req, res) {
             orderBy: {
                 id: 'asc'
             },
-            include: {
-                profiles: true,
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                created_at: true,
+                updated_at: true,
+                profiles: true
             },
         });
         let resp = ResponseTemplate(users, 'get data success', null, 200);
@@ -35,11 +40,18 @@ async function getUsers(req, res) {
 };
 
 async function postUser(req, res) {
-    const { name, email, password } = req.body;
+    const { name, email, password, identity_type, identity_number, address } = req.body;
     const payload = {
         name,
         email,
-        password
+        password,
+        profiles: {
+            create: {
+                identity_type,
+                identity_number,
+                address
+            }
+        }
     };
 
     try {
@@ -64,8 +76,13 @@ async function getUserById(req, res) {
             where: {
                 id: Number(id)
             },
-            include: {
-                profiles: true,
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                created_at: true,
+                updated_at: true,
+                profiles: true
             },
         });
         let resp = ResponseTemplate(users, 'get data success', null, 200);
@@ -79,11 +96,12 @@ async function getUserById(req, res) {
 };
 
 async function updateUser(req, res) {
-    const { name, email, password } = req.body;
+    const { name, email, password, identity_type, identity_number, address } = req.body;
     const { id } = req.params;
     const payload = {};
+    const profilePayload = {};
 
-    if (!name && !email && !password) {
+    if (!name && !email && !password && !identity_type && !identity_number && !address) {
         let resp = ResponseTemplate(null, 'bad request', null, 400);
         res.json(resp);
         return;
@@ -98,13 +116,29 @@ async function updateUser(req, res) {
     if (password) {
         payload.password = password
     }
+    if (identity_type) {
+        profilePayload.identity_type = identity_type
+    }
+    if (identity_number) {
+        profilePayload.identity_number = identity_number
+    }
+    if (address) {
+        profilePayload.address = address
+    }
 
     try {
         const users = await prisma.users.update({
             where: {
                 id: Number(id)
             },
-            data: payload
+            data: {
+                ...payload,
+                profiles: {
+                    update: {
+                        ...profilePayload
+                    }
+                }
+            }
         });
         let resp = ResponseTemplate(users, 'update data success', null, 200);
         res.json(resp);
