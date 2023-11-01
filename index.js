@@ -1,6 +1,5 @@
 const express = require('express');
 const router = require('./routes/route');
-const { object } = require('joi');
 const app = express();
 
 require('dotenv').config()
