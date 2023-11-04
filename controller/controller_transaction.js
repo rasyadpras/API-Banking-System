@@ -22,11 +22,11 @@ async function getTransactions(req, res) {
             }
         });
         let resp = ResponseTemplate(transactions, 'get data success', null, 200);
-        res.json(resp);
+        res.status(200).json(resp);
         return;
     } catch(error) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500);
-        res.json(resp);
+        res.status(500).json(resp);
         return;
     }
 };
@@ -43,12 +43,12 @@ async function postTransaction(req, res) {
         const transactions = await prisma.transactions.create({
             data: payload
         });
-        let resp = ResponseTemplate(transactions, 'input data success', null, 200);
-        res.json(resp);
+        let resp = ResponseTemplate(transactions, 'input data success', null, 201);
+        res.status(201).json(resp);
         return;
     } catch (error) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500);
-        res.json(resp);
+        res.status(500).json(resp);
         return;
     };
 };
@@ -57,29 +57,76 @@ async function getTransactionById(req, res) {
     const { id } = req.params;
 
     try {
+        const findTransaction = await prisma.transactions.findUnique({
+            where: {
+                id: Number(id)
+            }
+        });
+        if (!findTransaction) {
+            let resp = ResponseTemplate(null, 'transaction not found', null, 404);
+            res.status(404).json(resp);
+            return;
+        };
+
         const transactions = await prisma.transactions.findUnique({
             where: {
                 id: Number(id)
             },
-            include: {
+            select: {
+                id: true,
+                amount: true,
+                transaction_date: true,
+                updated_at: true,
+                source_account_id: true,
                 from_account: {
-                    include: {
-                        user: true
+                    select: {
+                        id: true,
+                        bank_name: true,
+                        bank_account_number: true,
+                        balance: true,
+                        created_at: true,
+                        updated_at: true,
+                        user_id: true,
+                        user: {
+                            select: {
+                                name: true,
+                                email: true,
+                                created_at: true,
+                                updated_at: true,
+                                profiles: true
+                            }
+                        }
                     }
                 },
+                destination_account_id: true,
                 to_account: {
-                    include: {
-                        user: true
+                    select: {
+                        id: true,
+                        bank_name: true,
+                        bank_account_number: true,
+                        balance: true,
+                        created_at: true,
+                        updated_at: true,
+                        user_id: true,
+                        user: {
+                            select: {
+                                name: true,
+                                email: true,
+                                created_at: true,
+                                updated_at: true,
+                                profiles: true
+                            }
+                        }
                     }
                 }
             }
         });
         let resp = ResponseTemplate(transactions, 'get data success', null, 200);
-        res.json(resp);
+        res.status(200).json(resp);
         return;
     } catch (error) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500);
-        res.json(resp);
+        res.status(500).json(resp);
         return;
     };
 };

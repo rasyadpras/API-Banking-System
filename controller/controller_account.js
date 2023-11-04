@@ -23,16 +23,30 @@ async function getAccounts(req, res) {
             orderBy: {
                 id: 'asc'
             },
-            include: {
-                user: true
+            select: {
+                id: true,
+                bank_name: true,
+                bank_account_number: true,
+                balance: true,
+                created_at: true,
+                updated_at: true,
+                user_id: true,
+                user: {
+                    select: {
+                        name: true,
+                        email: true,
+                        created_at: true,
+                        updated_at: true
+                    }
+                }
             }
         });
         let resp = ResponseTemplate(accounts, 'get data success', null, 200);
-        res.json(resp);
+        res.status(200).json(resp);
         return;
     } catch(error) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500);
-        res.json(resp);
+        res.status(500).json(resp);
         return;
     }
 };
@@ -50,12 +64,12 @@ async function postAccount(req, res) {
         const accounts = await prisma.bank_accounts.create({
             data: payload
         });
-        let resp = ResponseTemplate(accounts, 'input data success', null, 200);
-        res.json(resp);
+        let resp = ResponseTemplate(accounts, 'input data success', null, 201);
+        res.status(201).json(resp);
         return;
     } catch (error) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500);
-        res.json(resp);
+        res.status(500).json(resp);
         return;
     };
 };
@@ -68,22 +82,139 @@ async function getAccountById(req, res) {
             where: {
                 id: Number(id)
             },
-            include: {
-                user: true
+            select: {
+                id: true,
+                bank_name: true,
+                bank_account_number: true,
+                balance: true,
+                created_at: true,
+                updated_at: true,
+                user_id: true,
+                user: {
+                    select: {
+                        name: true,
+                        email: true,
+                        created_at: true,
+                        updated_at: true,
+                        profiles: true
+                    }
+                }
             }
         });
-        let resp = ResponseTemplate(accounts, 'get data success', null, 200);
-        res.json(resp);
-        return;
+        if (!accounts) {
+            let resp = ResponseTemplate(null, 'account not found', null, 404);
+            res.status(404).json(resp);
+            return;
+        } else {
+            let resp = ResponseTemplate(accounts, 'get data success', null, 200);
+            res.status(200).json(resp);
+            return;
+        }
     } catch (error) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500);
-        res.json(resp);
+        res.status(500).json(resp);
         return;
     };
+};
+
+async function updateAccount(req, res) {
+    const { user_id, bank_name, bank_account_number, balance } = req.body;
+    const { id } = req.params;
+    const payload = {};
+
+    if (!user_id && !bank_name && !bank_account_number && !balance) {
+        let resp = ResponseTemplate(null, 'bad request', null, 400);
+        res.status(400).json(resp);
+        return;
+    }
+
+    if (user_id) {
+        payload.user_id = user_id
+    }
+    if (bank_name) {
+        payload.bank_name = bank_name
+    }
+    if (bank_account_number) {
+        payload.bank_account_number = bank_account_number
+    }
+    if (balance) {
+        payload.balance = balance
+    }
+
+    try {
+        const findAccount = await prisma.bank_accounts.findUnique({
+            where: {
+                id: Number(id)
+            }
+        });
+        if (!findAccount) {
+            let resp = ResponseTemplate(null, 'account not found', null, 404);
+            res.status(404).json(resp);
+            return;
+        };
+        
+        const accounts = await prisma.bank_accounts.update({
+            where: {
+                id: Number(id)
+            },
+            data: payload
+        });
+        if (!accounts) {
+            let resp = ResponseTemplate(null, 'account not found', null, 404);
+            res.status(404).json(resp);
+            return;
+        } else {
+            let resp = ResponseTemplate(accounts, 'update data success', null, 200);
+            res.status(200).json(resp);
+            return;
+        }
+    } catch (error) {
+        let resp = ResponseTemplate(null, 'internal server error', error, 500);
+        res.status(500).json(resp);
+        return;
+    };
+};
+
+async function deleteAccount(req, res) {
+    const { id } = req.params;
+
+    try {
+        const findAccount = await prisma.bank_accounts.findUnique({
+            where: {
+                id: Number(id)
+            }
+        });
+        if (!findAccount) {
+            let resp = ResponseTemplate(null, 'account not found', null, 404);
+            res.status(404).json(resp);
+            return;
+        };
+
+        const accounts = await prisma.bank_accounts.delete({
+            where: {
+                id: Number(id)
+            },
+        });
+        if (!accounts) {
+            let resp = ResponseTemplate(null, 'account not found', null, 404);
+            res.status(404).json(resp);
+            return;
+        } else {
+            let resp = ResponseTemplate(users, 'delete data success', null, 200);
+            res.status(200).json(resp);
+            return;
+        }
+    } catch (error) {
+        let resp = ResponseTemplate(null, 'internal server error', error, 500);
+        res.status(500).json(resp);
+        return;
+    }
 };
 
 module.exports = {
     getAccounts,
     postAccount,
-    getAccountById
+    getAccountById,
+    updateAccount,
+    deleteAccount
 };

@@ -30,11 +30,11 @@ async function getUsers(req, res) {
             },
         });
         let resp = ResponseTemplate(users, 'get data success', null, 200);
-        res.json(resp);
+        res.status(200).json(resp);
         return;
     } catch(error) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500);
-        res.json(resp);
+        res.status(500).json(resp);
         return;
     }
 };
@@ -58,12 +58,12 @@ async function postUser(req, res) {
         const users = await prisma.users.create({
             data: payload
         });
-        let resp = ResponseTemplate(users, 'input data success', null, 200);
-        res.json(resp);
+        let resp = ResponseTemplate(users, 'input data success', null, 201);
+        res.status(201).json(resp);
         return;
     } catch (error) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500);
-        res.json(resp);
+        res.status(500).json(resp);
         return;
     };
 };
@@ -85,12 +85,18 @@ async function getUserById(req, res) {
                 profiles: true
             },
         });
-        let resp = ResponseTemplate(users, 'get data success', null, 200);
-        res.json(resp);
-        return;
+        if (!users) {
+            let resp = ResponseTemplate(null, 'user not found', null, 404);
+            res.status(404).json(resp);
+            return;
+        } else {
+            let resp = ResponseTemplate(users, 'get data success', null, 200);
+            res.status(200).json(resp);
+            return;
+        }
     } catch (error) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500);
-        res.json(resp);
+        res.status(500).json(resp);
         return;
     };
 };
@@ -103,7 +109,7 @@ async function updateUser(req, res) {
 
     if (!name && !email && !password && !identity_type && !identity_number && !address) {
         let resp = ResponseTemplate(null, 'bad request', null, 400);
-        res.json(resp);
+        res.status(400).json(resp);
         return;
     }
 
@@ -127,6 +133,17 @@ async function updateUser(req, res) {
     }
 
     try {
+        const findUser = await prisma.users.findUnique({
+            where: {
+                id: Number(id)
+            }
+        });
+        if (!findUser) {
+            let resp = ResponseTemplate(null, 'user not found', null, 404);
+            res.status(404).json(resp);
+            return;
+        };
+
         const users = await prisma.users.update({
             where: {
                 id: Number(id)
@@ -141,11 +158,11 @@ async function updateUser(req, res) {
             }
         });
         let resp = ResponseTemplate(users, 'update data success', null, 200);
-        res.json(resp);
+        res.status(200).json(resp);
         return;
     } catch (error) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500);
-        res.json(resp);
+        res.status(500).json(resp);
         return;
     };
 };
@@ -154,17 +171,28 @@ async function deleteUser(req, res) {
     const { id } = req.params;
 
     try {
+        const findUser = await prisma.users.findUnique({
+            where: {
+                id: Number(id)
+            }
+        });
+        if (!findUser) {
+            let resp = ResponseTemplate(null, 'user not found', null, 404);
+            res.status(404).json(resp);
+            return;
+        };
+
         const users = await prisma.users.delete({
             where: {
                 id: Number(id)
             },
         });
-        let resp = ResponseTemplate(null, 'delete data success', null, 200);
-        res.json(resp);
+        let resp = ResponseTemplate(users, 'delete data success', null, 200);
+        res.status(200).json(resp);
         return;
     } catch (error) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500);
-        res.json(resp);
+        res.status(500).json(resp);
         return;
     }
 };
