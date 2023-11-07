@@ -3,8 +3,6 @@ const router = require('./routes/route');
 const app = express();
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUI = require('swagger-ui-express');
-// const session = require('express-session');
-// const flash = require('express-flash');
 
 require('dotenv').config()
 const port = process.env.PORT || 3000;
