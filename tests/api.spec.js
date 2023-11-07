@@ -2,7 +2,7 @@ const request = require('supertest');
 const app = require('../index');
 
 describe('GET /api/v1/users', () => {
-    test('return 200', done => {
+    it('get all user data', async () => {
         request(app)
             .get('/api/v1/users')
             .then(res => {

@@ -3,8 +3,8 @@ const router = require('./routes/route');
 const app = express();
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUI = require('swagger-ui-express');
-const session = require('express-session');
-const flash = require('express-flash');
+// const session = require('express-session');
+// const flash = require('express-flash');
 
 require('dotenv').config()
 const port = process.env.PORT || 3000;
@@ -28,12 +28,6 @@ app.use(express.urlencoded({extended: false}));
 
 app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 app.use('/', router);
-// app.use(session({
-//     secret: 'secret',
-//     resave: false,
-//     saveUninitialized: true,
-// }));
-// app.use(flash());
 app.listen(port, () => console.log(`Server running at http://localhost:${port}`));
 
 module.exports = app;
