@@ -56,15 +56,7 @@ async function postUser(req, res) {
 
     try {
         const users = await prisma.users.create({
-            data: payload,
-            select: {
-                id: true,
-                name: true,
-                email: true,
-                created_at: true,
-                updated_at: true,
-                profiles: true
-            },
+            data: payload
         });
         let resp = ResponseTemplate(users, 'input data success', null, 201);
         res.status(201).json(resp);
@@ -163,15 +155,7 @@ async function updateUser(req, res) {
                         ...profilePayload
                     }
                 }
-            },
-            select: {
-                id: true,
-                name: true,
-                email: true,
-                created_at: true,
-                updated_at: true,
-                profiles: true
-            },
+            }
         });
         let resp = ResponseTemplate(users, 'update data success', null, 200);
         res.status(200).json(resp);
