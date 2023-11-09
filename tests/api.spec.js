@@ -46,6 +46,27 @@ describe('user test', () => {
             expect(resp.body.message).toEqual('input data success');
         } catch (error) {};
     });
+
+    it('update data user by id', async () => {
+        try {
+            const testUpdateUser = {
+                name: "Update Test",
+                email: "testing@update.com",
+                password: "abcde12345",
+                identity_type: "Identity card",
+                identity_number: "123456789",
+                address: "Anywhere"
+            };
+            const id = 19;
+            const resp = await request(app).put(`/api/v1/users/${id}`).send(testUpdateUser);
+            expect(resp.statusCode).toBe(200);
+            expect(resp.body.data).toBeTruthy();
+            expect(resp.body).toHaveProperty('message');
+            expect(resp.body).toHaveProperty('status');
+            expect(resp.body.status).toEqual(200);
+            expect(resp.body.message).toEqual('get data success');
+        } catch (error) {}
+    });
 });
 
 describe('account test', () => {
@@ -89,6 +110,25 @@ describe('account test', () => {
             expect(resp.body).toHaveProperty('status');
             expect(resp.body.status).toEqual(201);
             expect(resp.body.message).toEqual('input data success');
+        } catch (error) {}
+    });
+
+    it('update user account by id', async () => {
+        try {
+            const testUpdateAcc = {
+                user_id: 19,
+                bank_name: 'Example Bank',
+                bank_account_number: 1102,
+                balance: 10000
+            };
+            const id = 18;
+            const resp = await request(app).put(`/api/v1/users/${id}`).send(testUpdateAcc);
+            expect(resp.statusCode).toBe(200);
+            expect(resp.body.data).toBeTruthy();
+            expect(resp.body).toHaveProperty('message');
+            expect(resp.body).toHaveProperty('status');
+            expect(resp.body.status).toEqual(200);
+            expect(resp.body.message).toEqual('get data success');
         } catch (error) {}
     });
 });
